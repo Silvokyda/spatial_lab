@@ -1,7 +1,7 @@
 workflows:
   spatial-lab-ios-unsigned:
     name: Spatial Lab iOS unsigned debug
-    max_build_duration: 60
+    max_build_duration: 120
     instance_type: mac_mini_m2
     environment:
       flutter: stable
@@ -10,6 +10,10 @@ workflows:
     scripts:
       - name: Resolve Flutter packages
         script: flutter pub get
+      - name: Install CocoaPods dependencies
+        script: |
+          cd ios
+          pod install
       - name: Build iOS app without code signing
         script: flutter build ios --debug --no-codesign
       - name: Package app for personal sideloading
