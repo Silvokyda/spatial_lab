@@ -53,6 +53,8 @@ private struct HandSample {
 }
 
 final class SpatialARPlatformView: NSObject, FlutterPlatformView, ARSCNViewDelegate {
+  private let pinchEnterDistance: CGFloat = 0.09
+  private let pinchExitDistance: CGFloat = 0.12
   private let sceneView: ARSCNView
   private let channel: FlutterMethodChannel
   private let handQueue = DispatchQueue(label: "spatial_lab.vision_hand", qos: .userInitiated)
@@ -369,7 +371,7 @@ final class SpatialARPlatformView: NSObject, FlutterPlatformView, ARSCNViewDeleg
             rollDegrees: Float(atan2(palmDY, palmDX) * 180 / .pi),
             latencyMs: (CACurrentMediaTime() - started) * 1_000,
             timestamp: CACurrentMediaTime(),
-            pinching: pinchDistance < 0.055
+            pinching: pinchDistance < self.pinchEnterDistance
           )
         }
       } catch {
@@ -377,6 +379,7 @@ final class SpatialARPlatformView: NSObject, FlutterPlatformView, ARSCNViewDeleg
       }
       DispatchQueue.main.async {
         self.visionBusy = false
+        self.inferenceFrameCount += 1
         self.handLock.lock()
         self.latestHand = sample
         self.handLock.unlock()
@@ -448,8 +451,8 @@ final class SpatialARPlatformView: NSObject, FlutterPlatformView, ARSCNViewDeleg
 
     if sample.timestamp != lastGestureSampleTimestamp {
       lastGestureSampleTimestamp = sample.timestamp
-      let isInsidePinch = sample.pinchDistance < 0.055
-      let isOutsidePinch = sample.pinchDistance > 0.078
+      let isInsidePinch = sample.pinchDistance < pinchEnterDistance
+      let isOutsidePinch = sample.pinchDistance > pinchExitDistance
       pinchEnterCount = isInsidePinch ? pinchEnterCount + 1 : 0
       pinchExitCount = isOutsidePinch ? pinchExitCount + 1 : 0
 
