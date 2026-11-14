@@ -17,9 +17,9 @@ The initial Beaker, Cube, Sphere, and Test tube are lightweight procedural shape
 
 ## iPhone
 
-An iOS implementation is included for ARKit horizontal plane detection, anchored SceneKit primitives, and pinch manipulation using Vision hand-pose landmarks from ARKit's own camera frames. The hand ray is constrained to detected horizontal planes; its depth is not inferred from the monocular image. The palm line supplies only an approximate in-plane yaw cue.
+An iOS implementation is included for ARKit horizontal plane detection, anchored SceneKit primitives, and pinch manipulation using Vision hand-pose landmarks from ARKit's own camera frames. Grabbed objects move in tabletop-plane mode: left/right/forward/back on the surface they were placed on, never up or down. Hand depth is not inferred from the monocular image. On LiDAR iPhones the debug overlay shows a `sceneDepth` reading near the fingertips for diagnostics only. The palm line supplies only an approximate in-plane yaw cue. Tapping a surface still places objects with hand tracking on or off.
 
-This workspace runs on Windows and cannot compile the iOS target locally. `codemagic.yaml` defines an unsigned debug build and packages the `.app` as an `.ipa` artifact for personal sideloading. Codemagic needs the project in a connected Git repository to run that workflow. A free Apple Account sideload expires after seven days and must be refreshed with AltServer/AltStore. A paid membership is needed for Codemagic's normal signed IPA/TestFlight path.
+This workspace runs on Windows and cannot compile the iOS target locally. `codemagic.yaml` defines an unsigned release build and packages the `.app` as an `.ipa` artifact for personal sideloading. Codemagic needs the project in a connected Git repository to run that workflow. A free Apple Account sideload expires after seven days and must be refreshed with AltServer/AltStore. A paid membership is needed for Codemagic's normal signed IPA/TestFlight path.
 
 The iPhone 14 Pro supports the ARKit world-tracking route. The connected Android phone, OPPO CPH2473, is not supported by Google Play Services for AR; the app now shows that compatibility result rather than starting an empty AR surface.
 
