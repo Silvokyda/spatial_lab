@@ -613,11 +613,11 @@ final class SpatialARPlatformView: NSObject, FlutterPlatformView, ARSCNViewDeleg
     session.run(configuration)
   }
 
-  @objc private func applicationWillResignActive() {
+  @objc private func applicationWillResignActive(_ notification: Notification) {
     sceneView.session.pause()
   }
 
-  @objc private func applicationDidBecomeActive() {
+  @objc private func applicationDidBecomeActive(_ notification: Notification) {
     guard ARWorldTrackingConfiguration.isSupported else { return }
     let configuration = ARWorldTrackingConfiguration()
     configuration.planeDetection = [.horizontal]
